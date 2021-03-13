@@ -71,6 +71,16 @@ class Edge(pygame.sprite.Sprite):
         return (self.x1, self.y1), (self.x2, self.y2)
 
 
+    def getEndpoint1(self):
+
+        return (self.x1, self.y1)
+
+
+    def getEndpoint2(self):
+
+        return (self.x2, self.y2)
+
+
     def getPosition(self):
         
         return (self.x, self.y)

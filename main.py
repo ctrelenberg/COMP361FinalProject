@@ -5,6 +5,8 @@ from node import Node
 from edge import Edge
 from math import sqrt
 
+pygame.init()
+
 # Defining colours
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
@@ -13,8 +15,9 @@ GREY = (210, 210, 210)
 WHITE = (255, 255, 255)
 
 # Define and create window
-SCREENWIDTH = 400
-SCREENHEIGHT = 500
+infoObject = pygame.display.Info()
+SCREENWIDTH = infoObject.current_w // 2
+SCREENHEIGHT = infoObject.current_h // 2
 
 size = (SCREENWIDTH, SCREENHEIGHT)
 screen = pygame.display.set_mode(size)
@@ -83,11 +86,21 @@ while carryOn:
                     
                 if valid1 and valid2 and (not isDup):
                     all_edges.add(Edge(x1, y1, x2, y2, BLACK)) # Add an edge
+                x1, y1, x2, y2 = None, None, None, None
                 
             else: # If not, create a new node
+
+                valid = True
                 
                 pos = pygame.mouse.get_pos()
-                all_nodes.add(Node(pos[0], pos[1], 50, GREY))
+
+                for node in all_nodes:
+                    if node.inBounds(pos[0], pos[1]):
+                        node.kill()
+                        valid = False
+                        
+                if valid:
+                    all_nodes.add(Node(pos[0], pos[1], 50, GREY))
         
         elif event.type == pygame.KEYDOWN: # If a keypress is detected...
             

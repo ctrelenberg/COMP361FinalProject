@@ -31,6 +31,8 @@ class Node(pygame.sprite.Sprite):
         # Set the parent to None, will set in algorithms
         self.parent = None
 
+        self.edges = []
+
     def draw(self):
 
         # Draws circle relative to the sprite surface
@@ -38,6 +40,7 @@ class Node(pygame.sprite.Sprite):
         c = self.c
         r = self.r
         pygame.draw.circle(self.image, c, [r, r], r)
+    
 
     def getPosition(self):
 
