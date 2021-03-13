@@ -1,4 +1,5 @@
 import pygame
+from math import sqrt
 
 WHITE = (255, 255, 255)
 
@@ -13,7 +14,9 @@ class Node(pygame.sprite.Sprite):
         self.image.fill(WHITE)
         self.image.set_colorkey(WHITE)
 
-        # Setting colour and radius
+        # Setting attributes
+        self.x = x
+        self.y = y
         self.c = c
         self.r = r
 
@@ -35,6 +38,26 @@ class Node(pygame.sprite.Sprite):
         c = self.c
         r = self.r
         pygame.draw.circle(self.image, c, [r, r], r)
+
+    def getPosition(self):
+
+        return (self.x, self.y)
+
+
+    def getX(self):
+        
+        return self.x
+
+
+    def getY(self):
+
+        return self.y
+    
+
+    def inBounds(self, x, y):
+
+        return sqrt((self.x - x)**2 + (self.y - y)**2) <= self.r
+    
 
     def setColour(self, c):
         self.c = c

@@ -42,11 +42,11 @@ class Edge(pygame.sprite.Sprite):
         x2 = self.x2
         y2 = self.y2
 
-        start, end = self.getEndpoints()
+        start, end = self.convertEndpoints()
         pygame.draw.line(self.image, c, start, end, 5)
 
 
-    def getEndpoints(self):
+    def convertEndpoints(self):
 
         # Takes the global endpoint values and converts them
         # to relative values for the sprite surface
@@ -64,6 +64,16 @@ class Edge(pygame.sprite.Sprite):
             return [0, 0], [x1-x2, y1-y2]
         elif x1 > x2 and y1 <= y2:
             return [0, y2-y1], [x1-x2, 0]
+
+
+    def getEndpoints(self):
+
+        return (self.x1, self.y1), (self.x2, self.y2)
+
+
+    def getPosition(self):
+        
+        return (self.x, self.y)
         
 
     def setColour(self, c):
