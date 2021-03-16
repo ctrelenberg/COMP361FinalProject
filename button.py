@@ -4,7 +4,7 @@ WHITE = (255, 255, 255)
 
 class Button(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, w, h, c):
+    def __init__(self, x, y, w, h, c, name):
 
         super().__init__()
 
@@ -18,6 +18,7 @@ class Button(pygame.sprite.Sprite):
         self.y = y
         self.w = w
         self.h = h
+        self.name = name
 
         # Setting colour
         self.c = c
@@ -41,3 +42,11 @@ class Button(pygame.sprite.Sprite):
         w = self.w
         h = self.h
         pygame.draw.rect(self.image, c, [0, 0, w, h])
+
+
+    def inBounds(self, x, y):
+
+        inX = x > self.x and x < self.x+self.w
+        inY = y > self.y and x < self.y+self.h
+
+        return inX and inY

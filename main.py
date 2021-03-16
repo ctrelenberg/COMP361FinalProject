@@ -38,9 +38,10 @@ all_edges = pygame.sprite.Group()
 WIDTH = 80
 HEIGHT = 30
 buttons = pygame.sprite.Group()
-buttons.add(Button(10, SCREENHEIGHT-HEIGHT-10, WIDTH, HEIGHT, GREEN))
-buttons.add(Button(20+WIDTH, SCREENHEIGHT-HEIGHT-10, WIDTH, HEIGHT, RED))
-buttons.add(Button(10*3+WIDTH*2, SCREENHEIGHT-HEIGHT-10, WIDTH, HEIGHT, YELLOW))
+buttons.add(Button(10, SCREENHEIGHT-HEIGHT-10, WIDTH, HEIGHT, GREEN, "START"))
+buttons.add(Button(20+WIDTH, SCREENHEIGHT-HEIGHT-10, WIDTH, HEIGHT, RED, "STOP"))
+buttons.add(Button(10*3+WIDTH*2, SCREENHEIGHT-HEIGHT-10, WIDTH
+                   , HEIGHT, YELLOW, "STEP"))
 
 # Loop flag and setting up pygame clock
 appRunning = True
@@ -72,7 +73,16 @@ while appRunning:
             dx = pos_up[0] - pos_down[0]
             dy = pos_up[1] - pos_down[1]
 
-            if sqrt(dx**2 + dy**2) > 50: # If new pos is more than 50 pxls away
+            buttonClicked = False
+
+            for but in buttons:
+                if but.inBounds(pos_up[0], pos_up[1]):
+                    if but.name == "START": runAlg = True
+                    elif but.name == "STOP": runAlg = False
+                    elif but.name == "STEP": stepAlg = True
+                    buttonClicked = True
+
+            if sqrt(dx**2 + dy**2) > 50 and not buttonClicked: # If new pos is more than 50 pxls away
 
                 # Flags for points that occur within nodes
                 valid1 = False
@@ -108,7 +118,7 @@ while appRunning:
                     all_edges.add(Edge(x1, y1, x2, y2, BLACK)) # Add an edge
                 x1, y1, x2, y2 = None, None, None, None
                 
-            else: # If not, create a new node
+            elif not buttonClicked: # If not, create a new node
 
                 valid = True
                 
@@ -138,7 +148,7 @@ while appRunning:
 
     #---------------------------------------------------------------------------
     # Runtime "loop"
-    if runAlg:
+    if runAlg or stepAlg:
         if i % 60 == 0: # Every 60 frames, automatically cycle node colour
             for node in all_nodes:
                 if node.c == GREY:
@@ -147,10 +157,11 @@ while appRunning:
                     node.setColour(GREEN)
                 elif node.c == GREEN:
                     node.setColour(GREY)
-        
+
+            if stepAlg:
+                stepAlg = False
 
         i += 1 # Update frame counter
-
 
     #---------------------------------------------------------------------------
     # Draw screen
