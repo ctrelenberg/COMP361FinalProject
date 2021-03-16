@@ -102,10 +102,12 @@ while appRunning:
                         valid1 = True
                         x1 = node.getX()
                         y1 = node.getY()
+                        n1 = node
                     if node.inBounds(pos_up[0], pos_up[1]):
                         valid2 = True
                         x2 = node.getX()
                         y2 = node.getY()
+                        n2 = node
 
                 # Check to see if edge is a duplicate, delete edge if it is
                 for edge in all_edges:
@@ -115,10 +117,10 @@ while appRunning:
                         edge.kill()
                     
                 if valid1 and valid2 and (not isDup):
-                    all_edges.add(Edge(x1, y1, x2, y2, BLACK)) # Add an edge
+                    all_edges.add(Edge(x1, y1, x2, y2, BLACK, n1, n2)) # Add an edge
                 x1, y1, x2, y2 = None, None, None, None
                 
-            elif not buttonClicked: # If not, create a new node
+            elif not buttonClicked: # If not, create/delete node
 
                 valid = True
                 
@@ -126,6 +128,11 @@ while appRunning:
 
                 for node in all_nodes:
                     if node.inBounds(pos[0], pos[1]):
+                        # Delete edges attached to node
+                        for edge in all_edges:
+                            if edge.n1 == node or edge.n2 == node:
+                                edge.kill()
+                        # Delete node
                         node.kill()
                         valid = False
                         

@@ -4,7 +4,7 @@ WHITE = (255, 255, 255)
 
 class Edge(pygame.sprite.Sprite):
 
-    def __init__(self, x1, y1, x2, y2, c):
+    def __init__(self, x1, y1, x2, y2, c, n1, n2):
 
         super().__init__()
 
@@ -19,6 +19,10 @@ class Edge(pygame.sprite.Sprite):
 
         self.x2 = x2
         self.y2 = y2
+
+        # Adding nodes
+        self.n1 = n1
+        self.n2 = n2
 
         # Setting line colour
         self.c = c
