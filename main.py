@@ -6,6 +6,12 @@ from edge import Edge
 from button import Button
 from math import sqrt
 
+# Superfluous import -------------------
+# Used for random colours
+import random
+random.seed()
+#---------------------------------------
+
 pygame.init()
 
 # Defining colours
@@ -65,7 +71,7 @@ while appRunning:
         elif event.type == pygame.MOUSEBUTTONDOWN: # If mouse down, store pos
             
             pos_down = pygame.mouse.get_pos()
-
+            
         elif event.type == pygame.MOUSEBUTTONUP: # If user lifts mouse button...
 
             pos_up = pygame.mouse.get_pos() # Get new position
@@ -82,7 +88,7 @@ while appRunning:
                     elif but.name == "STEP": stepAlg = True
                     buttonClicked = True
 
-            if sqrt(dx**2 + dy**2) > 50 and not buttonClicked: # If new pos is more than 50 pxls away
+            if sqrt(dx**2 + dy**2) > RADIUS and not buttonClicked: # If new pos is more than 50 pxls away
 
                 # Flags for points that occur within nodes
                 valid1 = False
@@ -118,7 +124,8 @@ while appRunning:
                     
                 if valid1 and valid2 and (not isDup):
                     all_edges.add(Edge(x1, y1, x2, y2, BLACK, n1, n2)) # Add an edge
-                x1, y1, x2, y2 = None, None, None, None
+                    
+                x1, y1, n1, x2, y2, n2 = None, None, None, None, None, None
                 
             elif not buttonClicked: # If not, create/delete node
 
@@ -128,14 +135,23 @@ while appRunning:
 
                 for node in all_nodes:
                     if node.inBounds(pos[0], pos[1]):
-                        # Delete edges attached to node
-                        for edge in all_edges:
-                            if edge.n1 == node or edge.n2 == node:
-                                edge.kill()
-                        # Delete node
-                        node.kill()
-                        valid = False
                         
+                        if event.button == 3: # Right-click
+                            # Set to random colour for now
+                            r = random.randrange(0, 256)
+                            g = random.randrange(0, 256)
+                            b = random.randrange(0, 256)
+                            node.setColour((r, g, b))
+                            
+                        else:
+                            # Delete edges attached to node
+                            for edge in all_edges:
+                                if edge.n1 == node or edge.n2 == node:
+                                    edge.kill()
+                            # Delete node
+                            node.kill()
+                        valid = False
+
                 if valid:
                     all_nodes.add(Node(pos[0], pos[1], RADIUS, GREY))
         
