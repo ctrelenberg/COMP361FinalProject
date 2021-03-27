@@ -33,6 +33,9 @@ class Node(pygame.sprite.Sprite):
 
         self.edges = []
 
+    def addEdge(self, e):
+        self.edges.append(e)
+
     def draw(self):
 
         # Draws circle relative to the sprite surface
@@ -60,6 +63,10 @@ class Node(pygame.sprite.Sprite):
     def inBounds(self, x, y):
 
         return sqrt((self.x - x)**2 + (self.y - y)**2) <= self.r
+
+
+    def removeEdge(self, e):
+        self.edges.remove(e)
     
 
     def setColour(self, c):
