@@ -120,6 +120,7 @@ class Application:
                     x1 = node.getX()
                     y1 = node.getY()
                     n1 = node
+                    
                 if node.inBounds(pos_up[0], pos_up[1]):
                     valid2 = True
                     x2 = node.getX()
@@ -131,10 +132,18 @@ class Application:
                 point1, point2 = edge.getEndpoints()
                 if point1 == (x1, y1) and point2 == (x2, y2):
                     isDup = True
+                    # Removes edge from the lists of it's connected nodes
+                    edge.getNode1.removeEdge(edge)
+                    edge.getNode2.removeEdge(edge)
                     edge.kill()
+                    del edge
                 
             if valid1 and valid2 and (not isDup):
-                self.all_edges.add(Edge(x1, y1, x2, y2, BLACK, n1, n2)) # Add an edge
+                new_edge = Edge(x1, y1, x2, y2, BLACK, n1, n2)
+                # Adds edge to lists of the connected nodes
+                n1.addEdge(new_edge)
+                n2.addEdge(new_edge)
+                self.all_edges.add(new_edge) # Add an edge
                 
             x1, y1, n1, x2, y2, n2 = None, None, None, None, None, None
             
@@ -166,7 +175,7 @@ class Application:
                             self.startNode = None
                             self.startNodeSet = False
                             node.setColour(GREY)
-                        # return an end to to a regular node
+                        # return an end to a regular node
                         elif node == self.endNode and self.endNodeSet:
                             self.endNodeSet = False
                             self.endNode = None
@@ -177,6 +186,7 @@ class Application:
                         for edge in self.all_edges:
                             if edge.n1 == node or edge.n2 == node:
                                 edge.kill()
+                                del edge
 
                         # check if we are deleting a start or end node and update
                         if node == self.startNode:
@@ -187,6 +197,8 @@ class Application:
                             self.endNode = None
                         # Delete node
                         node.kill()
+                        del node
+                        
                     valid = False
 
             if valid:
@@ -215,8 +227,8 @@ class Application:
                         if node.c == GREY:
                             node.setColour(BLUE)
                         elif node.c == BLUE:
-                            node.setColour(GREEN)
-                        elif node.c == GREEN:
+                            node.setColour(YELLOW)
+                        elif node.c == YELLOW:
                             node.setColour(GREY)
 
 
@@ -228,8 +240,8 @@ class Application:
                     if node.c == GREY:
                         node.setColour(BLUE)
                     elif node.c == BLUE:
-                        node.setColour(GREEN)
-                    elif node.c == GREEN:
+                        node.setColour(YELLOW)
+                    elif node.c == YELLOW:
                         node.setColour(GREY)
 
                 if self.stepAlg:
