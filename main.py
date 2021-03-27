@@ -5,6 +5,7 @@ from node import Node
 from edge import Edge
 from button import Button
 from math import sqrt
+import tools
 
 # Superfluous import -------------------
 # Used for random colours
@@ -34,7 +35,6 @@ SCREENWIDTH = infoObject.current_w // 2
 SCREENHEIGHT = infoObject.current_h // 2
 
 size = (SCREENWIDTH, SCREENHEIGHT)
-screen = pygame.display.set_mode(size)
 pygame.display.set_caption("COMP361 Final Project")
 
 # Add buttons
@@ -65,12 +65,33 @@ class Application:
         self.startNode = None
         self.startNodeSet = False
 
+        # Render text on top of buttons
+        self.text = pygame.font.SysFont('arial', 20)
+
+        # Save pygame
+        self.pg = pygame
+
+        # Save screen
+        self.screen = pygame.display.set_mode(size)
+
+        # Clock
+        self.clock = None
+
     def run(self):
         # setting up pygame clock
-        clock = pygame.time.Clock()
-        while self.do_tick(clock):
+        self.clock = pygame.time.Clock()
+        while self.do_tick(self.clock):
             pass
         pygame.quit()
+
+
+    def generate_edge(self, x1, y1, x2, y2, n1, n2):
+        weight = tools.get_user_input(app=self, loc=n1.rect, restraints=['num'], default=1, prompt='Enter Weight:')
+        new_edge = Edge(x1, y1, x2, y2, BLACK, n1, n2, weight, app=self)
+        # Adds edge to lists of the connected nodes
+        n1.addEdge(new_edge)
+        n2.addEdge(new_edge)
+        self.all_edges.add(new_edge) # Add an edge
 
 
     def on_mouse_up(self, event):
@@ -138,12 +159,9 @@ class Application:
                     edge.kill()
                     del edge
                 
+
             if valid1 and valid2 and (not isDup):
-                new_edge = Edge(x1, y1, x2, y2, BLACK, n1, n2)
-                # Adds edge to lists of the connected nodes
-                n1.addEdge(new_edge)
-                n2.addEdge(new_edge)
-                self.all_edges.add(new_edge) # Add an edge
+                self.generate_edge(x1, y1, x2, y2, n1, n2)
                 
             x1, y1, n1, x2, y2, n2 = None, None, None, None, None, None
             
@@ -252,29 +270,27 @@ class Application:
         #---------------------------------------------------------------------------
         # Draw screen
 
-        screen.fill(WHITE) # Create blank screen
+        self.screen.fill(WHITE) # Create blank screen
 
-        self.all_edges.draw(screen) # Draw edges
-        self.all_nodes.draw(screen) # Draw nodes on top of edges
-        buttons.draw(screen) # Draw buttons
+        self.all_edges.draw(self.screen) # Draw edges
+        self.all_nodes.draw(self.screen) # Draw nodes on top of edges
+        buttons.draw(self.screen) # Draw buttons
         
-        # Render text on top of buttons
-        text = pygame.font.SysFont('arial', 20)
         
-        textSurf = text.render("Start", True, BLACK)
+        textSurf = self.text.render("Start", True, BLACK)
         textRect = textSurf.get_rect()
         textRect.center = ( 10 + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 )
-        screen.blit(textSurf, textRect)
+        self.screen.blit(textSurf, textRect)
 
-        textSurf = text.render("Stop", True, BLACK)
+        textSurf = self.text.render("Stop", True, BLACK)
         textRect = textSurf.get_rect()
         textRect.center = ( 20+WIDTH + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 )
-        screen.blit(textSurf, textRect)
+        self.screen.blit(textSurf, textRect)
 
-        textSurf = text.render("Step", True, BLACK)
+        textSurf = self.text.render("Step", True, BLACK)
         textRect = textSurf.get_rect()
         textRect.center = ( 10*3+WIDTH*2 + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 )
-        screen.blit(textSurf, textRect)
+        self.screen.blit(textSurf, textRect)
 
         pygame.display.update() # Updates entire window
 

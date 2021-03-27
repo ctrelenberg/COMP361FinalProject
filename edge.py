@@ -4,7 +4,7 @@ WHITE = (255, 255, 255)
 
 class Edge(pygame.sprite.Sprite):
 
-    def __init__(self, x1, y1, x2, y2, c, n1, n2):
+    def __init__(self, x1, y1, x2, y2, c, n1, n2, weight=0, app=None):
 
         super().__init__()
 
@@ -26,6 +26,19 @@ class Edge(pygame.sprite.Sprite):
 
         # Setting line colour
         self.c = c
+
+        # Setting weight
+        self.weight = str(weight)
+        self.text = app.text.render(self.weight, True, (0,0,0))
+        self.scr = app.screen
+        tr = self.text.get_size()
+
+        midx = (x1 + x2) / 2
+        midy = (y1 + y2) / 2
+        ltpos = (midx - tr[0]/2, midy - tr[1]/2)
+
+        self.text_rect = pygame.Rect(ltpos, tr)
+        print(self.text_rect)
 
         # Drawing line
         self.draw()
@@ -49,6 +62,7 @@ class Edge(pygame.sprite.Sprite):
         start, end = self.convertEndpoints()
         pygame.draw.line(self.image, c, start, end, 5)
 
+        self.scr.blit(self.text, self.text_rect)
 
     def convertEndpoints(self):
 
