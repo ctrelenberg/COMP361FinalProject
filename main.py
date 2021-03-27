@@ -66,6 +66,7 @@ class Application:
 
 
     def on_mouse_up(self, event):
+        
         pos_up = pygame.mouse.get_pos() # Get new position
         
         dx = pos_up[0] - self.pos_down[0]
@@ -75,10 +76,20 @@ class Application:
 
         for but in buttons:
             if but.inBounds(pos_up[0], pos_up[1]):
-                if but.name == "START": self.runAlg = True
-                elif but.name == "STOP": self.runAlg = False
-                elif but.name == "STEP": self.stepAlg = True
+                if but.name == "START":
+                    self.runAlg = True
+                    self.setAlg = False
+                elif but.name == "STOP":
+                    self.runAlg = False
+                    self.stepAlg = False
+                elif but.name == "STEP":
+                    self.runAlg = False
+                    self.stepAlg = True
                 buttonClicked = True
+
+        # This restricts modifying graph to when the loop is not running
+        if self.runAlg or self.stepAlg and not buttonClicked:
+            return
 
         if sqrt(dx**2 + dy**2) > RADIUS and not buttonClicked: # If new pos is more than 50 pxls away
 
