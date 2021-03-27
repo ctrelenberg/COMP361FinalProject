@@ -137,8 +137,8 @@ class Application:
                 if point1 == (x1, y1) and point2 == (x2, y2):
                     isDup = True
                     # Removes edge from the lists of it's connected nodes
-                    edge.getNode1.removeEdge(edge)
-                    edge.getNode2.removeEdge(edge)
+                    edge.getNode1().removeEdge(edge)
+                    edge.getNode2().removeEdge(edge)
                     edge.kill()
                     del edge
                 
