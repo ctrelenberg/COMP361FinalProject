@@ -1,6 +1,6 @@
 ### COMP361 Final Project
 
-*By Christian Trelenberg (30010670), Michael Bennett (300142749), and Steven W (300143567)*
+*By Christian Trelenberg (30010670), Michael Bennett (300142749), and Steven Waldock (300143567)*
 
 #### Installation
 
