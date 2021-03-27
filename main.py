@@ -57,6 +57,14 @@ class Application:
         self.stepAlg = False
         self.runAlg = False
 
+        # end node and if the end node is set of end node
+        self.endNodeSet = False
+        self.endNode = None
+
+        # start node and current state of start node
+        self.startNode = None
+        self.startNodeSet = False
+
     def run(self):
         # setting up pygame clock
         clock = pygame.time.Clock()
@@ -143,25 +151,25 @@ class Application:
                                                 # sets start and end nodes
 
                         # if we don't have a start node set, set the node we clicked on to green and make it the start node
-                        if not self.startStateSet:
-                            self.startState = node
-                            self.startStateSet = True
+                        if not self.startNodeSet:
+                            self.startNode = node
+                            self.startNodeSet = True
                             node.setColour(GREEN)
 
                         # only set an end node after we have set a start node and make sure they aren't the same node
-                        elif self.startStateSet and not self.endStateSet and (self.startState != node):
-                            self.endStateSet = True
-                            self.endState = node
+                        elif self.startNodeSet and not self.endNodeSet and (self.startNode != node):
+                            self.endNodeSet = True
+                            self.endNode = node
                             node.setColour(RED)
                         # return a start node to a regular node
-                        elif node == self.startState and self.startStateSet:
-                            self.startState = None
-                            self.startStateSet = False
+                        elif node == self.startNode and self.startNodeSet:
+                            self.startNode = None
+                            self.startNodeSet = False
                             node.setColour(GREY)
                         # return an end to to a regular node
-                        elif node == self.endState and self.endStateSet:
-                            self.endStateSet = False
-                            self.endState = None
+                        elif node == self.endNode and self.endNodeSet:
+                            self.endNodeSet = False
+                            self.endNode = None
                             node.setColour(GREY)
                         
                     else:
@@ -171,12 +179,12 @@ class Application:
                                 edge.kill()
 
                         # check if we are deleting a start or end node and update
-                        if node == self.startState:
-                            self.startStateSet = False
-                            self.startState = None
+                        if node == self.startNode:
+                            self.startNodeSet = False
+                            self.startNode = None
                         elif node == self.endState:
-                            self.endStateSet = False
-                            self.endState = None
+                            self.endNodeSet = False
+                            self.endNode = None
                         # Delete node
                         node.kill()
                     valid = False
