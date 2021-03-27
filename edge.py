@@ -85,6 +85,16 @@ class Edge(pygame.sprite.Sprite):
         return (self.x2, self.y2)
 
 
+    def getNode1(self):
+
+        return self.n1
+
+
+    def getNode2(self):
+
+        return self.n2
+
+
     def getPosition(self):
         
         return (self.x, self.y)
