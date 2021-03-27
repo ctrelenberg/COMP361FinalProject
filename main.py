@@ -5,7 +5,7 @@ from node import Node
 from edge import Edge
 from button import Button
 from math import sqrt
-from algorithm import AStar
+from algorithm import AStar, DepthFirstSearch, BreadthFirstSearch, Greedy
 
 # Superfluous import -------------------
 # Used for random colours
@@ -188,7 +188,7 @@ class Application:
                             
 
                         if self.startNodeSet and self.endNodeSet:
-                            self.algor = AStar(self.startNode, self.endNode)
+                            self.algor = Greedy(self.startNode, self.endNode)
                         
                     else:
                         # Delete edges attached to node
