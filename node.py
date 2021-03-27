@@ -31,6 +31,8 @@ class Node(pygame.sprite.Sprite):
         # Set the parent to None, will set in algorithms
         self.parent = None
 
+        self.costToReach = 0
+
         self.edges = []
 
     def addEdge(self, e):
@@ -73,4 +75,14 @@ class Node(pygame.sprite.Sprite):
         self.c = c
         self.draw()
 
-    
+    def getNeighbors(self):
+        neighbors = []
+
+        for edge in self.edges:
+            if edge.n1 == self:
+                neighbors.append(edge.n2)
+            else:
+                neighbors.append(edge.n1)
+        
+        return neighbors
+

@@ -6,6 +6,7 @@ from edge import Edge
 from button import Button
 from math import sqrt
 import tools
+from algorithm import AStar
 
 # Superfluous import -------------------
 # Used for random colours
@@ -76,6 +77,10 @@ class Application:
 
         # Clock
         self.clock = None
+
+        # Algorithms
+        self.algorithmInitialized = False
+        self.algor = None
 
     def run(self):
         # setting up pygame clock
@@ -154,8 +159,8 @@ class Application:
                 if point1 == (x1, y1) and point2 == (x2, y2):
                     isDup = True
                     # Removes edge from the lists of it's connected nodes
-                    edge.getNode1.removeEdge(edge)
-                    edge.getNode2.removeEdge(edge)
+                    edge.getNode1().removeEdge(edge)
+                    edge.getNode2().removeEdge(edge)
                     edge.kill()
                     del edge
                 
@@ -188,6 +193,7 @@ class Application:
                             self.endNodeSet = True
                             self.endNode = node
                             node.setColour(RED)
+
                         # return a start node to a regular node
                         elif node == self.startNode and self.startNodeSet:
                             self.startNode = None
@@ -198,6 +204,10 @@ class Application:
                             self.endNodeSet = False
                             self.endNode = None
                             node.setColour(GREY)
+                            
+
+                        if self.startNodeSet and self.endNodeSet:
+                            self.algor = AStar(self.startNode, self.endNode)
                         
                     else:
                         # Delete edges attached to node
@@ -210,9 +220,11 @@ class Application:
                         if node == self.startNode:
                             self.startNodeSet = False
                             self.startNode = None
-                        elif node == self.endState:
+                            self.algor = None
+                        elif node == self.endNode:
                             self.endNodeSet = False
                             self.endNode = None
+                            self.algor = None
                         # Delete node
                         node.kill()
                         del node
@@ -226,6 +238,8 @@ class Application:
     def do_tick(self, clock):
         #---------------------------------------------------------------------------
         # User input handling
+
+        
         
         for event in pygame.event.get(): # Check all user events
             
@@ -240,27 +254,18 @@ class Application:
 
             elif event.type == pygame.KEYDOWN: # If a keypress is detected...
                 if event.key == pygame.K_SPACE: # ... and it was the spacebar
-                    for node in self.all_nodes:
-                        # Cycle the colour of the nodes. BLUE -> GREEN -> GREY -> BLUE
-                        if node.c == GREY:
-                            node.setColour(BLUE)
-                        elif node.c == BLUE:
-                            node.setColour(YELLOW)
-                        elif node.c == YELLOW:
-                            node.setColour(GREY)
+                    if self.startNodeSet and self.endNodeSet:
+                        self.algor.stepAlgorithm()
 
 
         #---------------------------------------------------------------------------
         # Runtime "loop"
         if self.runAlg or self.stepAlg:
             if self.i % 60 == 0: # Every 60 frames, automatically cycle node colour
-                for node in self.all_nodes:
-                    if node.c == GREY:
-                        node.setColour(BLUE)
-                    elif node.c == BLUE:
-                        node.setColour(YELLOW)
-                    elif node.c == YELLOW:
-                        node.setColour(GREY)
+                
+                if self.startNodeSet and self.endNodeSet:
+                    self.algor.stepAlgorithm()
+
 
                 if self.stepAlg:
                     self.stepAlg = False
