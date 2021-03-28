@@ -128,7 +128,7 @@ class DepthFirstSearch:
             neighbor.costToReach = self.currentNode.costToReach + self.distanceBetweenNodes(neighbor, self.currentNode)
             # set the colour of a visited node to blue
             neighbor.setColour((0,0,255))
-            self.stack.append(neighbor)
+            self.stack.push(neighbor)
 
     def distanceBetweenNodes(self, node1, node2):
         x = node1.x - node2.x
