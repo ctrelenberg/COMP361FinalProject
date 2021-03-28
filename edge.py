@@ -1,4 +1,5 @@
 import pygame
+from math import floor, sqrt
 
 WHITE = (255, 255, 255)
 
@@ -28,7 +29,10 @@ class Edge(pygame.sprite.Sprite):
         self.c = c
 
         # Setting weight
-        self.weight = str(weight)
+
+        # Changing weight to the length of the line
+        # self.weight = str(weight)
+        self.weight = str(floor(sqrt(abs(x1-x2)**2 + abs(y1-y2)**2)))
         self.text = app.text.render(self.weight, True, (255,255,255), (40,40,40))
         self.scr = app.screen
         tr = self.text.get_size()

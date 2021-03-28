@@ -102,8 +102,8 @@ class Application:
 
 
     def generate_edge(self, x1, y1, x2, y2, n1, n2):
-        weight = tools.get_user_input(app=self, loc=n1.rect, restraints=['num'], default=1, prompt='Enter Weight:')
-        new_edge = Edge(x1, y1, x2, y2, BLACK, n1, n2, weight, app=self)
+        #weight = tools.get_user_input(app=self, loc=n1.rect, restraints=['num'], default=1, prompt='Enter Weight:')
+        new_edge = Edge(x1, y1, x2, y2, BLACK, n1, n2, 0, app=self)
         # Adds edge to lists of the connected nodes
         n1.addEdge(new_edge)
         n2.addEdge(new_edge)
@@ -123,6 +123,7 @@ class Application:
             if but.inBounds(pos_up[0], pos_up[1]):
                 if but.name == "START":
                     if self.startNodeSet and self.endNodeSet:
+                        print(self.algor)
                         self.runAlg = True
                         self.setAlg = False
                 elif but.name == "STOP":
@@ -168,6 +169,8 @@ class Application:
             sorted_pos = sorted([self.pos_down, pos_up])
             self.pos_down = sorted_pos[0]
             pos_up = sorted_pos[1]
+
+            x1, y1, x2, y2 = None, None, None, None
 
             # Check that the endpoints occur within nodes
             for node in self.all_nodes:
@@ -309,8 +312,13 @@ class Application:
         self.screen.fill(WHITE) # Create blank screen
 
         self.all_edges.draw(self.screen) # Draw edges
+
+        '''
+        Omitting the drawing of edge labels
         for s in self.all_edges.sprites():
             s.draw_label()
+        '''
+
         self.all_nodes.draw(self.screen) # Draw nodes on top of edges
         buttons.draw(self.screen) # Draw buttons
         alg_buttons.draw(self.screen)
