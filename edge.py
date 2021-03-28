@@ -29,7 +29,7 @@ class Edge(pygame.sprite.Sprite):
 
         # Setting weight
         self.weight = str(weight)
-        self.text = app.text.render(self.weight, True, (0,0,0))
+        self.text = app.text.render(self.weight, True, (255,255,255), (40,40,40))
         self.scr = app.screen
         tr = self.text.get_size()
 
@@ -62,7 +62,10 @@ class Edge(pygame.sprite.Sprite):
         start, end = self.convertEndpoints()
         pygame.draw.line(self.image, c, start, end, 5)
 
+
+    def draw_label(self):
         self.scr.blit(self.text, self.text_rect)
+
 
     def convertEndpoints(self):
 

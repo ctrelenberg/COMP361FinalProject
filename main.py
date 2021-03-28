@@ -278,6 +278,8 @@ class Application:
         self.screen.fill(WHITE) # Create blank screen
 
         self.all_edges.draw(self.screen) # Draw edges
+        for s in self.all_edges.sprites():
+            s.draw_label()
         self.all_nodes.draw(self.screen) # Draw nodes on top of edges
         buttons.draw(self.screen) # Draw buttons
         
