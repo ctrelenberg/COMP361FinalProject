@@ -47,6 +47,6 @@ class Button(pygame.sprite.Sprite):
     def inBounds(self, x, y):
 
         inX = x > self.x and x < self.x+self.w
-        inY = y > self.y and x < self.y+self.h
+        inY = y > self.y and y < self.y+self.h
 
         return inX and inY

@@ -21,6 +21,9 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 YELLOW = (255, 255, 0)
+ORANGE = (255, 126, 0)
+CYAN = (0, 255, 255)
+MAGENTA = (255, 0, 255)
 GREY = (210, 210, 210)
 D_GREY = (105, 105, 105)
 WHITE = (255, 255, 255)
@@ -46,6 +49,14 @@ buttons.add(Button(10, SCREENHEIGHT-HEIGHT-10, WIDTH, HEIGHT, GREEN, "START"))
 buttons.add(Button(20+WIDTH, SCREENHEIGHT-HEIGHT-10, WIDTH, HEIGHT, RED, "STOP"))
 buttons.add(Button(10*3+WIDTH*2, SCREENHEIGHT-HEIGHT-10, WIDTH
                    , HEIGHT, YELLOW, "STEP"))
+# A*, DFS, BFS, Greedy, D*, Theta*
+alg_buttons = pygame.sprite.Group()
+alg_buttons.add(Button(10, 10, WIDTH, HEIGHT, GREEN, "A*"))
+alg_buttons.add(Button(10, 10*2+HEIGHT, WIDTH, HEIGHT, RED, "DFS"))
+alg_buttons.add(Button(10, 10*3+HEIGHT*2, WIDTH, HEIGHT, BLUE, "BFS"))
+alg_buttons.add(Button(10, 10*4+HEIGHT*3, WIDTH, HEIGHT, CYAN, "Greedy"))
+alg_buttons.add(Button(10, 10*5+HEIGHT*4, WIDTH, HEIGHT, YELLOW, "D*"))
+alg_buttons.add(Button(10, 10*6+HEIGHT*5, WIDTH, HEIGHT, MAGENTA, "Theta*"))
 
 class Application:
     def __init__(self):
@@ -111,14 +122,34 @@ class Application:
         for but in buttons:
             if but.inBounds(pos_up[0], pos_up[1]):
                 if but.name == "START":
-                    self.runAlg = True
-                    self.setAlg = False
+                    if self.startNodeSet and self.endNodeSet:
+                        self.runAlg = True
+                        self.setAlg = False
                 elif but.name == "STOP":
                     self.runAlg = False
                     self.stepAlg = False
                 elif but.name == "STEP":
-                    self.runAlg = False
-                    self.stepAlg = True
+                    if self.startNodeSet and self.endNodeSet:
+                        self.runAlg = False
+                        self.stepAlg = True
+                buttonClicked = True
+
+        for but in alg_buttons:
+            if  but.inBounds(pos_up[0], pos_up[1]):
+                if self.startNodeSet and self.endNodeSet:
+                    if but.name == "A*":
+                        self.algor = AStar(self.startNode, self.endNode)
+                    elif but.name == "DFS":
+                        self.algor = DepthFirstSearch(self.startNode, self.endNode)
+                    elif but.name == "BFS":
+                        self.algor = BreadthFirstSearch(self.startNode, self.endNode)
+                    elif but.name == "Greedy":
+                        self.algor = Greedy(self.startNode, self.endNode)
+                    elif but.name == "D*":
+                        self.algor = "D*"
+                    elif but.name == "Theta*":
+                        self.algor = "Theta*"
+
                 buttonClicked = True
 
         # This restricts modifying graph to when the loop is not running
@@ -282,27 +313,29 @@ class Application:
             s.draw_label()
         self.all_nodes.draw(self.screen) # Draw nodes on top of edges
         buttons.draw(self.screen) # Draw buttons
-        
-        
-        textSurf = self.text.render("Start", True, BLACK)
-        textRect = textSurf.get_rect()
-        textRect.center = ( 10 + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 )
-        self.screen.blit(textSurf, textRect)
+        alg_buttons.draw(self.screen)
 
-        textSurf = self.text.render("Stop", True, BLACK)
-        textRect = textSurf.get_rect()
-        textRect.center = ( 20+WIDTH + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 )
-        self.screen.blit(textSurf, textRect)
+        self.renderText("Start", ( 10 + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 ))
+        self.renderText("Stop", ( 10*2+WIDTH + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 ))
+        self.renderText("Step", ( 10*3+WIDTH*2 + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 ))
 
-        textSurf = self.text.render("Step", True, BLACK)
-        textRect = textSurf.get_rect()
-        textRect.center = ( 10*3+WIDTH*2 + WIDTH // 2, SCREENHEIGHT-HEIGHT-10 + HEIGHT // 2 )
-        self.screen.blit(textSurf, textRect)
+        self.renderText('A*', ( 10 + WIDTH // 2, 10 + HEIGHT // 2 ))
+        self.renderText('DFS', ( 10 + WIDTH // 2, 10*2+HEIGHT + HEIGHT // 2 ))
+        self.renderText('BFS', ( 10 + WIDTH // 2, 10*3+HEIGHT*2 + HEIGHT // 2 ))
+        self.renderText('Greedy', ( 10 + WIDTH // 2, 10*4+HEIGHT*3 + HEIGHT // 2 ))
+        self.renderText('D*', ( 10 + WIDTH // 2, 10*5+HEIGHT*4 + HEIGHT // 2 ))
+        self.renderText('Theta*', ( 10 + WIDTH // 2, 10*6+HEIGHT*5 + HEIGHT // 2 ))
 
         pygame.display.update() # Updates entire window
 
         clock.tick(60) # Cap framerate to 60
         return True
+
+    def renderText(self, text, center):
+        textSurf = self.text.render(text, True, BLACK)
+        textRect = textSurf.get_rect()
+        textRect.center = center
+        self.screen.blit(textSurf, textRect)
 
 
 if __name__ == "__main__":
