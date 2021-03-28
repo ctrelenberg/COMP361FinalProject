@@ -6,6 +6,8 @@ from itertools import count
 
 unique = count()
 
+D_GREY = (105, 105, 105)
+
 # implementation of A* algorithm
 class AStar:
     def __init__(self, startNode, endNode):
@@ -33,7 +35,7 @@ class AStar:
         self.visitedNodes.append(self.currentNode)
         # change the colour of visited nodes to grey
         for node in self.visitedNodes:
-            node.setColour((210,210,210))
+            node.setColour(D_GREY)
 
         # set the colour of the curren node to orange
         self.currentNode.setColour((255,140,0))
@@ -103,7 +105,7 @@ class DepthFirstSearch:
 
         self.visitedNodes.append(self.currentNode)
         for node in self.visitedNodes:
-            node.setColour((210,210,210))
+            node.setColour(D_GREY)
         self.currentNode.setColour((255,140,0))
 
         if self.currentNode == self.endNode:
@@ -155,7 +157,7 @@ class BreadthFirstSearch:
 
         self.visitedNodes.append(self.currentNode)
         for node in self.visitedNodes:
-            node.setColour((210,210,210))
+            node.setColour(D_GREY)
         self.currentNode.setColour((255,140,0))
 
         if self.currentNode == self.endNode:
@@ -213,7 +215,7 @@ class Greedy:
         self.visitedNodes.append(self.currentNode)
         # change the colour of visited nodes to grey
         for node in self.visitedNodes:
-            node.setColour((210,210,210))
+            node.setColour(D_GREY)
 
         # set the colour of the curren node to orange
         self.currentNode.setColour((255,140,0))
@@ -278,7 +280,7 @@ class GreedyHuristic:
         self.visitedNodes.append(self.currentNode)
         # change the colour of visited nodes to grey
         for node in self.visitedNodes:
-            node.setColour((210,210,210))
+            node.setColour(D_GREY)
 
         # set the colour of the curren node to orange
         self.currentNode.setColour((255,140,0))
