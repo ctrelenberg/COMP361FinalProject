@@ -9,6 +9,7 @@ from math import sqrt
 import tools
 from algorithm import AStar, DepthFirstSearch, BreadthFirstSearch, Greedy
 from constants import *
+from config import Config
 
 # Superfluous import -------------------
 # Used for random colours
@@ -21,17 +22,15 @@ pygame.display.set_caption("COMP361 Final Project")
 
 # Add buttons
 buttons = pygame.sprite.Group()
-buttons.add(Button(10, SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, GREEN, "START"))
-buttons.add(Button(20 + BUTTON_WIDTH, SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, RED, "STOP"))
-buttons.add(Button(10 * 3 + BUTTON_WIDTH * 2, SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH
-                   , BUTTON_HEIGHT, YELLOW, "STEP"))
+bottom_pos = lambda ordinal: ordinal * 10 + (ordinal - 1) * BUTTON_WIDTH
+buttons.add(Button(bottom_pos(1), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, GREEN, "START"))
+buttons.add(Button(bottom_pos(2), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, RED, "STOP"))
+buttons.add(Button(bottom_pos(3), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, YELLOW, "STEP"))
+buttons.add(Button(bottom_pos(4), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, GREY, "CLEAR"))
 # A*, DFS, BFS, Greedy, D*, Theta*
-buttons.add(Button(10, 10, BUTTON_WIDTH, BUTTON_HEIGHT, GREEN, "A*"))
-buttons.add(Button(10, 10 * 2 + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT, RED, "DFS"))
-buttons.add(Button(10, 10 * 3 + BUTTON_HEIGHT * 2, BUTTON_WIDTH, BUTTON_HEIGHT, BLUE, "BFS"))
-buttons.add(Button(10, 10 * 4 + BUTTON_HEIGHT * 3, BUTTON_WIDTH, BUTTON_HEIGHT, CYAN, "Greedy"))
-buttons.add(Button(10, 10 * 5 + BUTTON_HEIGHT * 4, BUTTON_WIDTH, BUTTON_HEIGHT, YELLOW, "D*"))
-buttons.add(Button(10, 10 * 6 + BUTTON_HEIGHT * 5, BUTTON_WIDTH, BUTTON_HEIGHT, MAGENTA, "Theta*"))
+left_pos = lambda ordinal: ordinal * 10 + (ordinal - 1) * BUTTON_HEIGHT
+algorithm_ids = [(GREEN, "A*"), (RED, "DFS"), (BLUE, "BFS"), (CYAN, "Greedy"), (YELLOW, "D*"), (MAGENTA, "Theta*")]
+[buttons.add(Button(10, left_pos(o+1), BUTTON_WIDTH, BUTTON_HEIGHT, c, n)) for o, (c, n) in enumerate(algorithm_ids)]
 
 class Application:
     def __init__(self):
@@ -68,6 +67,18 @@ class Application:
         self.algorithmInitialized = False
         self.algor = None
 
+        self.config = Config()
+
+    def clear(self):
+        self.stepAlg = False
+        self.runAlg = False
+        self.endNode = None
+        self.endNodeSet = False
+        self.startNode = None
+        self.startNodeSet = False
+        self.all_nodes.empty()
+        self.all_edges.empty()
+
     def run(self):
         # setting up pygame clock
         self.clock = pygame.time.Clock()
@@ -83,7 +94,6 @@ class Application:
         n1.addEdge(new_edge)
         n2.addEdge(new_edge)
         self.all_edges.add(new_edge) # Add an edge
-
 
     def on_mouse_up(self, event):
         
@@ -110,6 +120,8 @@ class Application:
                     if self.startNodeSet and self.endNodeSet:
                         self.runAlg = False
                         self.stepAlg = True
+                elif but.name == "CLEAR":
+                    self.clear()
                 else:
                     if self.startNodeSet and self.endNodeSet:
                         if but.name == "A*":
@@ -295,11 +307,9 @@ class Application:
 
         self.all_edges.draw(self.screen) # Draw edges
 
-        '''
-        Omitting the drawing of edge labels
-        for s in self.all_edges.sprites():
-            s.draw_label()
-        '''
+        if self.config.draw_edge_labels:
+            for s in self.all_edges.sprites():
+                s.draw_label()
 
         self.all_nodes.draw(self.screen) # Draw nodes on top of edges
         buttons.draw(self.screen) # Draw buttons
