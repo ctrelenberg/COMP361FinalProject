@@ -59,6 +59,11 @@ class AStar:
             # skip a node if we have visited it
             if neighbor in self.visitedNodes:
                 continue
+            
+            # only add to the priority queue if we have an improvement
+            if neighbor.costToReach != 0 and neighbor.costToReach < self.currentNode.costToReach + self.distanceBetweenNodes(neighbor, self.currentNode):
+                continue
+            
             # make the parent of the neighboring node the current node
             neighbor.parent = self.currentNode
             # update the cost to reach of the neighboring node
@@ -130,7 +135,7 @@ class DepthFirstSearch:
             neighbor.costToReach = self.currentNode.costToReach + self.distanceBetweenNodes(neighbor, self.currentNode)
             # set the colour of a visited node to blue
             neighbor.setColour((0,0,255))
-            self.stack.push(neighbor)
+            self.stack.append(neighbor)
 
     def distanceBetweenNodes(self, node1, node2):
         x = node1.x - node2.x
