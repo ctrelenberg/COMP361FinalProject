@@ -3,6 +3,7 @@ from queue import PriorityQueue, Queue
 from math import sqrt
 
 from itertools import count
+from constants import *
 
 unique = count()
 
@@ -35,10 +36,10 @@ class AStar:
         self.visitedNodes.append(self.currentNode)
         # change the colour of visited nodes to grey
         for node in self.visitedNodes:
-            node.setColour(D_GREY)
+            node.setColour(Colours.VISITED)
 
-        # set the colour of the curren node to orange
-        self.currentNode.setColour((255,140,0))
+        # set the colour of the current node to orange
+        self.currentNode.setColour(Colours.CURRENT_NODE)
 
         # check if we have found the goal node
         if self.currentNode == self.endNode:
@@ -47,7 +48,7 @@ class AStar:
             self.complete = True
             # change the path of nodes to green
             while self.currentNode != None:
-                self.currentNode.setColour((0,255,100))
+                self.currentNode.setColour(Colours.PATH_NODE)
                 self.currentNode = self.currentNode.parent
             return
 

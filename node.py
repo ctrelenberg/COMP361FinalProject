@@ -4,6 +4,7 @@ from math import sqrt
 WHITE = (255, 255, 255)
 
 class Node(pygame.sprite.Sprite):
+    RADIUS = 30
 
     def __init__(self, x, y, r, c):
 
