@@ -317,6 +317,7 @@ class Application:
         self.renderText("Start", (10 + BUTTON_WIDTH // 2, SCREENHEIGHT - BUTTON_HEIGHT - 10 + BUTTON_HEIGHT // 2))
         self.renderText("Stop", (10 * 2 + BUTTON_WIDTH + BUTTON_WIDTH // 2, SCREENHEIGHT - BUTTON_HEIGHT - 10 + BUTTON_HEIGHT // 2))
         self.renderText("Step", (10 * 3 + BUTTON_WIDTH * 2 + BUTTON_WIDTH // 2, SCREENHEIGHT - BUTTON_HEIGHT - 10 + BUTTON_HEIGHT // 2))
+        self.renderText("Clear", (10 * 4 + BUTTON_WIDTH * 3 + BUTTON_WIDTH // 2, SCREENHEIGHT - BUTTON_HEIGHT - 10 + BUTTON_HEIGHT // 2))
 
         self.renderText('A*', (10 + BUTTON_WIDTH // 2, 10 + BUTTON_HEIGHT // 2))
         self.renderText('DFS', (10 + BUTTON_WIDTH // 2, 10 * 2 + BUTTON_HEIGHT + BUTTON_HEIGHT // 2))
