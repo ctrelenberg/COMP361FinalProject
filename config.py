@@ -8,6 +8,8 @@ class Config:
         else:
             self.conf = {}
         self.draw_edge_labels = self.get('draw_edge_labels', False)
+        self.draw_node_labels = self.get('draw_node_labels', True)
+        self.display_algorithm_indicator = self.get('display_algorithm_indicator', True)
 
     def get(self, string, default=None):
         return self.conf[string] if string in self.conf else default
