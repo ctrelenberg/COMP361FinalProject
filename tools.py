@@ -1,3 +1,13 @@
+__font = None
+
+def get_font():
+    import pygame
+    global __font
+    if __font is None:
+        __font = pygame.font.SysFont('arial', 20)
+    return __font
+
+
 class PygameContext:
     def __init__(self, screen, surface, pg):
         self.screen = screen

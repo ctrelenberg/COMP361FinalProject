@@ -23,10 +23,10 @@ pygame.display.set_caption("COMP361 Final Project")
 # Add buttons
 buttons = pygame.sprite.Group()
 bottom_pos = lambda ordinal: ordinal * 10 + (ordinal - 1) * BUTTON_WIDTH
-buttons.add(Button(bottom_pos(1), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, GREEN, "START"))
-buttons.add(Button(bottom_pos(2), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, RED, "STOP"))
-buttons.add(Button(bottom_pos(3), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, YELLOW, "STEP"))
-buttons.add(Button(bottom_pos(4), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, GREY, "CLEAR"))
+buttons.add(Button(bottom_pos(1), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, GREEN, "Start"))
+buttons.add(Button(bottom_pos(2), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, RED, "Stop"))
+buttons.add(Button(bottom_pos(3), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, YELLOW, "Step"))
+buttons.add(Button(bottom_pos(4), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, GREY, "Clear"))
 # A*, DFS, BFS, Greedy, D*, Theta*
 left_pos = lambda ordinal: ordinal * 10 + (ordinal - 1) * BUTTON_HEIGHT
 algorithm_ids = [(GREEN, "A*"), (RED, "DFS"), (BLUE, "BFS"), (CYAN, "Greedy"), (YELLOW, "D*"), (MAGENTA, "Theta*")]
@@ -50,9 +50,6 @@ class Application:
         # start node and current state of start node
         self.startNode = None
         self.startNodeSet = False
-
-        # Render text on top of buttons
-        self.text = pygame.font.SysFont('arial', 20)
 
         # Save pygame
         self.pg = pygame
@@ -106,21 +103,21 @@ class Application:
 
         for but in buttons:
             if but.inBounds(pos_up[0], pos_up[1]):
-                if but.name == "START":
+                if but.name == "Start":
                     if self.startNodeSet and self.endNodeSet:
                         print("Running with algorithm:", self.algor)
                         self.runAlg = True
                         self.setAlg = False
                     else:
                         print('Start and/or end nodes are not defined.')
-                elif but.name == "STOP":
+                elif but.name == "Stop":
                     self.runAlg = False
                     self.stepAlg = False
-                elif but.name == "STEP":
+                elif but.name == "Step":
                     if self.startNodeSet and self.endNodeSet:
                         self.runAlg = False
                         self.stepAlg = True
-                elif but.name == "CLEAR":
+                elif but.name == "Clear":
                     self.clear()
                 else:
                     if self.startNodeSet and self.endNodeSet:
@@ -314,28 +311,14 @@ class Application:
         self.all_nodes.draw(self.screen) # Draw nodes on top of edges
         buttons.draw(self.screen) # Draw buttons
 
-        self.renderText("Start", (10 + BUTTON_WIDTH // 2, SCREENHEIGHT - BUTTON_HEIGHT - 10 + BUTTON_HEIGHT // 2))
-        self.renderText("Stop", (10 * 2 + BUTTON_WIDTH + BUTTON_WIDTH // 2, SCREENHEIGHT - BUTTON_HEIGHT - 10 + BUTTON_HEIGHT // 2))
-        self.renderText("Step", (10 * 3 + BUTTON_WIDTH * 2 + BUTTON_WIDTH // 2, SCREENHEIGHT - BUTTON_HEIGHT - 10 + BUTTON_HEIGHT // 2))
-        self.renderText("Clear", (10 * 4 + BUTTON_WIDTH * 3 + BUTTON_WIDTH // 2, SCREENHEIGHT - BUTTON_HEIGHT - 10 + BUTTON_HEIGHT // 2))
-
-        self.renderText('A*', (10 + BUTTON_WIDTH // 2, 10 + BUTTON_HEIGHT // 2))
-        self.renderText('DFS', (10 + BUTTON_WIDTH // 2, 10 * 2 + BUTTON_HEIGHT + BUTTON_HEIGHT // 2))
-        self.renderText('BFS', (10 + BUTTON_WIDTH // 2, 10 * 3 + BUTTON_HEIGHT * 2 + BUTTON_HEIGHT // 2))
-        self.renderText('Greedy', (10 + BUTTON_WIDTH // 2, 10 * 4 + BUTTON_HEIGHT * 3 + BUTTON_HEIGHT // 2))
-        self.renderText('D*', (10 + BUTTON_WIDTH // 2, 10 * 5 + BUTTON_HEIGHT * 4 + BUTTON_HEIGHT // 2))
-        self.renderText('Theta*', (10 + BUTTON_WIDTH // 2, 10 * 6 + BUTTON_HEIGHT * 5 + BUTTON_HEIGHT // 2))
+        for s in buttons.sprites():
+            button_surf, button_rect = s.get_text()
+            self.screen.blit(button_surf, button_rect)
 
         pygame.display.update() # Updates entire window
 
         clock.tick(60) # Cap framerate to 60
         return True
-
-    def renderText(self, text, center):
-        textSurf = self.text.render(text, True, BLACK)
-        textRect = textSurf.get_rect()
-        textRect.center = center
-        self.screen.blit(textSurf, textRect)
 
 
 if __name__ == "__main__":
