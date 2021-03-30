@@ -63,6 +63,8 @@ class Application:
         # Algorithms
         self.algorithmInitialized = False
         self.algor = None
+        self.algname = None
+        self.alg_text = None
 
         self.config = Config()
 
@@ -121,6 +123,7 @@ class Application:
                     self.clear()
                 else:
                     if self.startNodeSet and self.endNodeSet:
+                        self.algname = but.name
                         if but.name == "A*":
                             self.algor = AStar(self.startNode, self.endNode)
                             print('Set algorithm to A*.')
@@ -212,24 +215,28 @@ class Application:
                             self.startNode = node
                             self.startNodeSet = True
                             node.setColour(GREEN)
+                            node.set_label('Start')
 
                         # only set an end node after we have set a start node and make sure they aren't the same node
                         elif self.startNodeSet and not self.endNodeSet and (self.startNode != node):
                             self.endNodeSet = True
                             self.endNode = node
                             node.setColour(RED)
+                            node.set_label('End')
 
                         # return a start node to a regular node
                         elif node == self.startNode and self.startNodeSet:
                             self.startNode = None
                             self.startNodeSet = False
                             node.setColour(GREY)
-                        # return an end to a regular node
+                            node.set_label()
+                    # return an end to a regular node
                         elif node == self.endNode and self.endNodeSet:
                             self.endNodeSet = False
                             self.endNode = None
                             node.setColour(GREY)
-                            
+                            node.set_label()
+
 
                         if self.startNodeSet and self.endNodeSet:
                             self.algor = Greedy(self.startNode, self.endNode)
@@ -303,17 +310,33 @@ class Application:
         self.screen.fill(WHITE) # Create blank screen
 
         self.all_edges.draw(self.screen) # Draw edges
-
         if self.config.draw_edge_labels:
             for s in self.all_edges.sprites():
                 s.draw_label()
 
-        self.all_nodes.draw(self.screen) # Draw nodes on top of edges
-        buttons.draw(self.screen) # Draw buttons
 
+        self.all_nodes.draw(self.screen) # Draw nodes on top of edges
+        if self.config.draw_node_labels:
+            for s in self.all_nodes.sprites():
+                if s.has_label():
+                    label_surf, label_rect = s.get_label()
+                    self.screen.blit(label_surf, label_rect)
+
+        buttons.draw(self.screen) # Draw buttons
         for s in buttons.sprites():
             button_surf, button_rect = s.get_text()
             self.screen.blit(button_surf, button_rect)
+
+        if self.config.display_algorithm_indicator and self.algname is not None:
+            if self.alg_text is None or self.alg_text[0] != self.algname:
+                new_render = tools.get_font().render(self.algname, True, BLACK)
+                tsrect = new_render.get_rect()
+                textx = SCREENWIDTH - 10 - tsrect.w
+                texty = 10
+                tsrect.center = (textx, texty)
+                self.alg_text = (self.algname, new_render, tsrect)
+            _name, surf, rct = self.alg_text
+            self.screen.blit(surf, rct)
 
         pygame.display.update() # Updates entire window
 

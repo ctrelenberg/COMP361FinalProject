@@ -1,3 +1,5 @@
 {
-  "draw_edge_labels": true
+  "draw_edge_labels": true,
+  "draw_node_labels": true,
+  "display_algorithm_indicator": true
 }

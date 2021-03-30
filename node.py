@@ -1,7 +1,7 @@
 import pygame
 from math import sqrt
-
-WHITE = (255, 255, 255)
+from tools import get_font
+from constants import WHITE, BLACK
 
 class Node(pygame.sprite.Sprite):
     RADIUS = 30
@@ -35,6 +35,30 @@ class Node(pygame.sprite.Sprite):
         self.costToReach = 0
 
         self.edges = []
+
+        self.label = None
+        self.label_rect = None
+        self.label_text = None
+
+    def set_label(self, text=None):
+        if text is None:
+            self.label = None
+            self.label_text = None
+            self.label_rect = None
+            return
+        self.label_text = text
+        self.label = get_font().render(self.label_text, True, BLACK)
+        textx = self.rect.x + Node.RADIUS
+        texty = self.rect.y + Node.RADIUS
+        tsrect = self.label.get_rect()
+        tsrect.center = (textx, texty)
+        self.label_rect = tsrect
+
+    def get_label(self):
+        return (self.label, self.label_rect)
+
+    def has_label(self):
+        return self.label is not None
 
     def addEdge(self, e):
         self.edges.append(e)
