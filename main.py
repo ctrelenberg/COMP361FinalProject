@@ -32,7 +32,7 @@ buttons.add(Button(bottom_pos(4), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDT
 buttons.add(Button(bottom_pos(5), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, BLUE, "Reset"))
 # A*, DFS, BFS, Greedy, D*, Theta*
 left_pos = lambda ordinal: ordinal * 10 + (ordinal - 1) * BUTTON_HEIGHT
-algorithm_ids = [(GREEN, "A*"), (RED, "DFS"), (BLUE, "BFS"), (CYAN, "Greedy"), (YELLOW, "Greedy*")]
+algorithm_ids = [(GREEN, "A*"), (RED, "DFS"), (BLUE, "BFS"), (CYAN, "Greedy"), (YELLOW, "Greedy*"), (ORANGE, "Random"), (BLUE, "Random*")]
 [buttons.add(Button(10, left_pos(o+1), BUTTON_WIDTH, BUTTON_HEIGHT, c, n, tags=['algorithm'])) for o, (c, n) in enumerate(algorithm_ids)]
 
 class Application:
@@ -130,6 +130,12 @@ class Application:
         elif self.algname == "Greedy*":
             self.algor = GreedyHeuristic(self.startNode, self.endNode)
             print('Set algorithm to Greedy*.')
+        elif self.algname == "Random":
+            self.algor = RandomA(self.startNode, self.endNode)
+            print('Set algorithm to Random.')
+        elif self.algname == "Random*":
+            self.algor = RandomStar(self.startNode, self.endNode)
+            print('Set algorithm to Random*.')
         for b in buttons:
             if b.tags is not None and 'algorithm' in b.tags:
                 if b.name != self.algname:

@@ -4,6 +4,7 @@ from math import sqrt
 
 from itertools import count
 from constants import *
+import random
 
 unique = count()
 
@@ -333,3 +334,129 @@ class GreedyHeuristic:
         return self.distanceBetweenNodes(node1, node2)
 
 
+class Algorithm:
+    def __init__(self, startNode, endNode):
+        self.startNode = startNode  # start node
+        self.endNode = endNode  # end node
+        self.currentNode = None  # the currently used node
+        self.visitedNodes = []  # list of visited nodes
+        self.priorityQueue = PriorityQueue()  # priority queue to make for less sorting
+        self.complete = False   # boolean if the algorithm has completed or not
+
+
+class RandomA(Algorithm):
+    def __init__(self, *args, **kwargs):
+        super(RandomA, self).__init__(*args, **kwargs)
+
+        self.explored = set()
+        self.frontier = set()
+        self.path = list()
+        self.frontier.add(self.startNode)
+
+    def make_frontier(self, n):
+        self.frontier.add(n)
+        n.setColour(BLUE)
+
+    # this function performs one step of RandomA* until completeion
+    def stepAlgorithm(self):
+        if self.complete or len(self.frontier) == 0:
+            return
+
+        n = random.choice(list(self.frontier))
+        self.frontier.remove(n)
+        n.setColour(ORANGE)
+        if n in self.explored:
+            self.stepAlgorithm()
+            return
+
+        self.currentNode = n
+        self.path.append(n)
+
+        if n == self.endNode:
+            self.complete = True
+            for p in self.path:
+                p.setColour(GREEN)
+            return
+
+        l = n.getNeighbors().copy()
+        [l.remove(ln) for ln in self.explored if ln in l]
+
+        if not l:
+            # this node has no neighbours that we haven't already explored
+            # go back to frontier
+            self.explored.add(self.path.pop())
+            self.currentNode.setColour(GREY)
+            return
+        for nn in l:
+            self.make_frontier(nn)
+
+    # find the distance between nodes using euclidean distance
+    # needs updating to deal with user input
+    def distanceBetweenNodes(self, node1, node2):
+        x = node1.x - node2.x
+        y = node1.y - node2.y
+        return sqrt(x ** 2 + y ** 2)
+
+    # find the huristics between nodes using euclidean distance
+    # needs a new function to deal with user inputter costs
+    def huristicFunction(self, node1, node2):
+        return self.distanceBetweenNodes(node1, node2)
+
+
+class RandomStar(Algorithm):
+    def __init__(self, *args, **kwargs):
+        super(RandomStar, self).__init__(*args, **kwargs)
+
+        self.explored = set()
+        self.frontier = set()
+        self.path = list()
+        self.frontier.add(self.startNode)
+
+    def make_frontier(self, n):
+        self.frontier.add(n)
+        n.setColour(BLUE)
+
+    # this function performs one step of RandomA* until completeion
+    def stepAlgorithm(self):
+        if self.complete or len(self.frontier) == 0:
+            return
+
+        n = random.choices(population=list(self.frontier), weights=[self.distanceBetweenNodes(nn, self.endNode) for nn in self.frontier], k=1)[0]
+        self.frontier.remove(n)
+        n.setColour(ORANGE)
+        if n in self.explored:
+            self.stepAlgorithm()
+            return
+
+        self.currentNode = n
+        self.path.append(n)
+
+        if n == self.endNode:
+            self.complete = True
+            for p in self.path:
+                p.setColour(GREEN)
+            return
+
+        l = n.getNeighbors().copy()
+        [l.remove(ln) for ln in self.explored if ln in l]
+
+        if not l:
+            # this node has no neighbours that we haven't already explored
+            # go back to frontier
+            self.explored.add(self.path.pop())
+            self.currentNode.setColour(GREY)
+            return
+        for nn in l:
+            self.make_frontier(nn)
+
+    # find the distance between nodes using euclidean distance
+    # needs updating to deal with user input
+    def distanceBetweenNodes(self, node1, node2):
+        x = node1.x - node2.x
+        y = node1.y - node2.y
+        return sqrt(x ** 2 + y ** 2)
+
+    # find the huristics between nodes using euclidean distance
+    # needs a new function to deal with user inputter costs
+    def huristicFunction(self, node1, node2):
+        return self.distanceBetweenNodes(node1, node2)
