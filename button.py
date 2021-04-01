@@ -1,11 +1,11 @@
 import pygame
-from constants import BUTTON_WIDTH, BUTTON_HEIGHT, BLACK, WHITE
+from constants import BUTTON_WIDTH, BUTTON_HEIGHT, BLACK, WHITE, GREY
 from tools import get_font
 
 
 class Button(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, w, h, c, name):
+    def __init__(self, x, y, w, h, c, name, tags=None):
         super().__init__()
 
         # Create transparent sprite surface to draw sprite on
@@ -22,6 +22,7 @@ class Button(pygame.sprite.Sprite):
 
         # Setting colour
         self.c = c
+        self.deselect_col = None
 
         # Drawing box
         self.draw()
@@ -30,6 +31,9 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+        # Tags
+        self.tags = tags
 
         # Rendering button text
         self.textSurf = get_font().render(self.name, True, BLACK)
@@ -42,6 +46,14 @@ class Button(pygame.sprite.Sprite):
     def get_text(self):
         return (self.textSurf, self.textRect)
 
+    def set_deselected(self, deselect_col = GREY):
+        self.deselect_col = deselect_col
+        self.draw()
+
+    def set_selected(self, deselect_col = GREY):
+        self.deselect_col = None
+        self.draw()
+
     def draw(self):
         # Draws line relative to the sprite surface
 
@@ -50,7 +62,7 @@ class Button(pygame.sprite.Sprite):
         y = self.y
         w = self.w
         h = self.h
-        pygame.draw.rect(self.image, c, [0, 0, w, h])
+        pygame.draw.rect(self.image, c if self.deselect_col is None else self.deselect_col, [0, 0, w, h])
 
     def inBounds(self, x, y):
         inX = x > self.x and x < self.x + self.w

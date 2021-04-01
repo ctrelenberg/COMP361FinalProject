@@ -1,11 +1,11 @@
-__font = None
+__fonts = dict()
 
-def get_font():
+def get_font(font_id = 'default', font_size = 20, font_name = 'arial'):
     import pygame
-    global __font
-    if __font is None:
-        __font = pygame.font.SysFont('arial', 20)
-    return __font
+    global __fonts
+    if font_id not in __fonts:
+        __fonts[font_id] = pygame.font.SysFont(font_name, font_size)
+    return __fonts[font_id]
 
 
 class PygameContext:

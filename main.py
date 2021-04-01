@@ -11,6 +11,8 @@ from algorithm import AStar, DepthFirstSearch, BreadthFirstSearch, Greedy
 from constants import *
 from config import Config
 
+tools.get_font('clippy', font_name='arial', font_size=13)
+
 # Superfluous import -------------------
 # Used for random colours
 import random
@@ -27,10 +29,11 @@ buttons.add(Button(bottom_pos(1), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDT
 buttons.add(Button(bottom_pos(2), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH, BUTTON_HEIGHT, RED, "Stop"))
 buttons.add(Button(bottom_pos(3), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, YELLOW, "Step"))
 buttons.add(Button(bottom_pos(4), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, GREY, "Clear"))
+buttons.add(Button(bottom_pos(5), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, BLUE, "Reset"))
 # A*, DFS, BFS, Greedy, D*, Theta*
 left_pos = lambda ordinal: ordinal * 10 + (ordinal - 1) * BUTTON_HEIGHT
 algorithm_ids = [(GREEN, "A*"), (RED, "DFS"), (BLUE, "BFS"), (CYAN, "Greedy"), (YELLOW, "D*"), (MAGENTA, "Theta*")]
-[buttons.add(Button(10, left_pos(o+1), BUTTON_WIDTH, BUTTON_HEIGHT, c, n)) for o, (c, n) in enumerate(algorithm_ids)]
+[buttons.add(Button(10, left_pos(o+1), BUTTON_WIDTH, BUTTON_HEIGHT, c, n, tags=['algorithm'])) for o, (c, n) in enumerate(algorithm_ids)]
 
 class Application:
     def __init__(self):
@@ -61,7 +64,6 @@ class Application:
         self.clock = None
 
         # Algorithms
-        self.algorithmInitialized = False
         self.algor = None
         self.algname = None
         self.alg_text = None
@@ -85,6 +87,9 @@ class Application:
             pass
         pygame.quit()
 
+    def stop_running(self):
+        self.runAlg = False
+        self.stepAlg = False
 
     def generate_edge(self, x1, y1, x2, y2, n1, n2):
         #weight = tools.get_user_input(app=self, loc=n1.rect, restraints=['num'], default=1, prompt='Enter Weight:')
@@ -94,10 +99,37 @@ class Application:
         n2.addEdge(new_edge)
         self.all_edges.add(new_edge) # Add an edge
 
+    def set_algorithm(self, algname):
+        self.algname = algname
+        if self.algname == "A*":
+            self.algor = AStar(self.startNode, self.endNode)
+            print('Set algorithm to A*.')
+        elif self.algname == "DFS":
+            self.algor = DepthFirstSearch(self.startNode, self.endNode)
+            print('Set algorithm to DFS.')
+        elif self.algname == "BFS":
+            self.algor = BreadthFirstSearch(self.startNode, self.endNode)
+            print('Set algorithm to BFS.')
+        elif self.algname == "Greedy":
+            self.algor = Greedy(self.startNode, self.endNode)
+            print('Set algorithm to Greedy.')
+        elif self.algname == "D*":
+            self.algor = "D*"
+            print('Set algorithm to D*.')
+        elif self.algname == "Theta*":
+            self.algor = "Theta*"
+            print('Set algorithm to Theta*.')
+        for b in buttons:
+            if b.tags is not None and 'algorithm' in b.tags:
+                if b.name != self.algname:
+                    b.set_deselected()
+                else:
+                    b.set_selected()
+
     def on_mouse_up(self, event):
-        
+
         pos_up = pygame.mouse.get_pos() # Get new position
-        
+
         dx = pos_up[0] - self.pos_down[0]
         dy = pos_up[1] - self.pos_down[1]
 
@@ -109,39 +141,30 @@ class Application:
                     if self.startNodeSet and self.endNodeSet:
                         print("Running with algorithm:", self.algor)
                         self.runAlg = True
-                        self.setAlg = False
                     else:
                         print('Start and/or end nodes are not defined.')
                 elif but.name == "Stop":
-                    self.runAlg = False
-                    self.stepAlg = False
+                    self.stop_running()
                 elif but.name == "Step":
                     if self.startNodeSet and self.endNodeSet:
-                        self.runAlg = False
+                        self.stop_running()
                         self.stepAlg = True
                 elif but.name == "Clear":
                     self.clear()
+                elif but.name == "Reset":
+                    for n in self.all_nodes.sprites():
+                        if n not in [self.startNode, self.endNode]:
+                            n.c = GREY
+                        elif n == self.startNode:
+                            n.c = GREEN
+                        elif n == self.endNode:
+                            n.c = RED
+                        n.draw()
+                        self.stop_running()
+                    self.set_algorithm(self.algname)
                 else:
                     if self.startNodeSet and self.endNodeSet:
-                        self.algname = but.name
-                        if but.name == "A*":
-                            self.algor = AStar(self.startNode, self.endNode)
-                            print('Set algorithm to A*.')
-                        elif but.name == "DFS":
-                            self.algor = DepthFirstSearch(self.startNode, self.endNode)
-                            print('Set algorithm to DFS.')
-                        elif but.name == "BFS":
-                            self.algor = BreadthFirstSearch(self.startNode, self.endNode)
-                            print('Set algorithm to BFS.')
-                        elif but.name == "Greedy":
-                            self.algor = Greedy(self.startNode, self.endNode)
-                            print('Set algorithm to Greedy.')
-                        elif but.name == "D*":
-                            self.algor = "D*"
-                            print('Set algorithm to D*.')
-                        elif but.name == "Theta*":
-                            self.algor = "Theta*"
-                            print('Set algorithm to Theta*.')
+                        self.set_algorithm(but.name)
                     else:
                         print('Start and/or end nodes are not defined.')
 
@@ -239,8 +262,8 @@ class Application:
 
 
                         if self.startNodeSet and self.endNodeSet:
-                            self.algor = Greedy(self.startNode, self.endNode)
-                        
+                            self.set_algorithm('A*')
+
                     else:
                         # Delete edges attached to node
                         for edge in self.all_edges:
@@ -252,11 +275,11 @@ class Application:
                         if node == self.startNode:
                             self.startNodeSet = False
                             self.startNode = None
-                            self.algor = None
+                            self.set_algorithm(None)
                         elif node == self.endNode:
                             self.endNodeSet = False
                             self.endNode = None
-                            self.algor = None
+                            self.set_algorithm(None)
                         # Delete node
                         node.kill()
                         del node
@@ -329,9 +352,9 @@ class Application:
 
         if self.config.display_algorithm_indicator and self.algname is not None:
             if self.alg_text is None or self.alg_text[0] != self.algname:
-                new_render = tools.get_font().render(self.algname, True, BLACK)
+                new_render = tools.get_font('clippy').render('Algorithm: ' + self.algname, True, BLACK)
                 tsrect = new_render.get_rect()
-                textx = SCREENWIDTH - 10 - tsrect.w
+                textx = SCREENWIDTH - 2 - tsrect.w
                 texty = 10
                 tsrect.center = (textx, texty)
                 self.alg_text = (self.algname, new_render, tsrect)
