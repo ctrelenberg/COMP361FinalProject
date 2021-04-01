@@ -99,7 +99,21 @@ class Application:
         n2.addEdge(new_edge)
         self.all_edges.add(new_edge) # Add an edge
 
+    def reset_map(self):
+        for n in self.all_nodes.sprites():
+            if n not in [self.startNode, self.endNode]:
+                n.c = GREY
+            elif n == self.startNode:
+                n.c = GREEN
+            elif n == self.endNode:
+                n.c = RED
+            n.draw()
+            self.stop_running()
+
     def set_algorithm(self, algname):
+        if algname == self.algname:
+            return
+        self.reset_map()
         self.algname = algname
         if self.algname == "A*":
             self.algor = AStar(self.startNode, self.endNode)
@@ -149,15 +163,7 @@ class Application:
                 elif but.name == "Clear":
                     self.clear()
                 elif but.name == "Reset":
-                    for n in self.all_nodes.sprites():
-                        if n not in [self.startNode, self.endNode]:
-                            n.c = GREY
-                        elif n == self.startNode:
-                            n.c = GREEN
-                        elif n == self.endNode:
-                            n.c = RED
-                        n.draw()
-                        self.stop_running()
+                    self.reset_map()
                     self.set_algorithm(self.algname)
                 else:
                     if self.startNodeSet and self.endNodeSet:
