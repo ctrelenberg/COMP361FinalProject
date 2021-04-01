@@ -7,7 +7,7 @@ from edge import Edge
 from button import Button
 from math import sqrt
 import tools
-from algorithm import AStar, DepthFirstSearch, BreadthFirstSearch, Greedy
+from algorithm import *
 from constants import *
 from config import Config
 
@@ -32,7 +32,7 @@ buttons.add(Button(bottom_pos(4), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDT
 buttons.add(Button(bottom_pos(5), SCREENHEIGHT - BUTTON_HEIGHT - 10, BUTTON_WIDTH , BUTTON_HEIGHT, BLUE, "Reset"))
 # A*, DFS, BFS, Greedy, D*, Theta*
 left_pos = lambda ordinal: ordinal * 10 + (ordinal - 1) * BUTTON_HEIGHT
-algorithm_ids = [(GREEN, "A*"), (RED, "DFS"), (BLUE, "BFS"), (CYAN, "Greedy"), (YELLOW, "D*"), (MAGENTA, "Theta*")]
+algorithm_ids = [(GREEN, "A*"), (RED, "DFS"), (BLUE, "BFS"), (CYAN, "Greedy"), (YELLOW, "Greedy*")]
 [buttons.add(Button(10, left_pos(o+1), BUTTON_WIDTH, BUTTON_HEIGHT, c, n, tags=['algorithm'])) for o, (c, n) in enumerate(algorithm_ids)]
 
 class Application:
@@ -113,12 +113,9 @@ class Application:
         elif self.algname == "Greedy":
             self.algor = Greedy(self.startNode, self.endNode)
             print('Set algorithm to Greedy.')
-        elif self.algname == "D*":
-            self.algor = "D*"
-            print('Set algorithm to D*.')
-        elif self.algname == "Theta*":
-            self.algor = "Theta*"
-            print('Set algorithm to Theta*.')
+        elif self.algname == "Greedy*":
+            self.algor = GreedyHeuristic(self.startNode, self.endNode)
+            print('Set algorithm to Greedy*.')
         for b in buttons:
             if b.tags is not None and 'algorithm' in b.tags:
                 if b.name != self.algname:
