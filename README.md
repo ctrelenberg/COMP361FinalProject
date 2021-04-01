@@ -7,6 +7,11 @@
 This application requires Pygame to run properly. For optimal results, run:
 
 ```
+# Note: We have included a working virtual environment, for your convenience!
+# It should work without any of these steps.
+# If it doesn't, delete .env/ and try the following steps.
+# It is necessary to activate the virtual environment by sourcing the `.env/bin/activate` file,
+# or (on windows) using `.env/bin/Activate.ps1` or the batch file in the same directory.
 python3 -m venv .env
 . .env/bin/activate # Or use the batch file if on windows
 pip3 install -r requirements.txt # This will install the necessary dependencies
